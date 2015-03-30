@@ -56,6 +56,8 @@ int main()
 	string str_node_data_result_line = str_line_number + str_any_char_many;
 
 	string str_member_data_result_line = str_line_number + str_any_char_many;
+	string str_member_ends = str_space_single + str_digit_some + str_space_single + str_digit_some + str_space_single + str_digit_some + str_semicolon_opt;
+	string str_member_ends_and = str_member_ends + str_any_char_many;
 
 	//cout<<str_node_number_coords<<"\n";
 	//cout<<str_node_number_coords_many<<"\n";
@@ -65,17 +67,26 @@ int main()
 
 	string input = "    177. 832 0.25 1 0.75; 833 0.3 1 0.75; 834 0.25 1 0.8; 835 0.35 1 0.75";
 	string str_remaining = " ";
-	string node_number;
+	string node_number, member_number, member_node_left, member_node_right;
 	string x_c, y_c, z_c;
 
-	int node_num;
+	int node_num, member_num;
+	int mem_node_left, mem_node_right;
 	float x, y, z;
 
+	/// ISSUE
+	// Nodes and members are considered as vectors of 10000 here although, they mite have be increased in size.
+
+	// Each node has three coordinates, which can be any float
 	vector< vector<float> > nodes(10000, vector<float>(3));
+	// Each member has two ends, both of which are positive ints
+	vector< vector<int> > members(10000, vector<int>(2));
+
 
 	regex joint_line(str_node_data_result_line);
 	regex member_line(str_member_data_result_line);
 	regex node_coords(str_node_number_coords_and);
+	regex member_ends(str_member_ends_and);
 
 	infile.open("test1.anl");
 
@@ -147,6 +158,7 @@ int main()
 								break;
 							}
 
+							// Parsing members to find the end nodes
 							if (output_line.find_first_not_of(' ') != string::npos)
 							{
 
@@ -166,42 +178,26 @@ int main()
 								while (!str_remaining.empty())
 								{
 
-									regex_search(str_remaining, next_match, node_coords);
+									regex_search(str_remaining, next_match, member_ends);
 
 									for (int j = 0; j < next_match.size(); j++)
 									{
 										cout << "next_match[ " << j << " ] : " << next_match[j] << "\n";
 									}
 
-									node_number = next_match[2];
-									node_num = stoi(node_number);
+									member_number = next_match[2];
+									member_num = stoi(node_number);
 
-									x_c = next_match.str(4) + next_match.str(5) + next_match.str(6) + next_match.str(7);
-									y_c = next_match.str(9) + next_match.str(10) + next_match.str(11) + next_match.str(12);
-									z_c = next_match.str(14) + next_match.str(15) + next_match.str(16) + next_match.str(17);
+									member_node_left = next_match.str(4);
+									member_node_right = next_match.str(6);
 
-									x = stof(x_c);
-									y = stof(y_c);
-									z = stof(z_c);
+									mem_node_left = stoi(member_node_left);
+									mem_node_right = stoi(member_node_right);
 
-									cout << " Node Number: " << node_num << "\n";
-									cout << " X coordinate " << x << "\n";
-									cout << " Y coordinate " << y << "\n";
-									cout << " Z coordinate " << z << "\n";
+									members[member_num][0] = mem_node_left;
+									members[member_num][1] = mem_node_right;
 
-									nodes[node_num][0] = x;
-									nodes[node_num][1] = y;
-									nodes[node_num][2] = z;
-
-									/* if(next_match[19] == " ")
-									{
-									cout<<"Whole line read";
-									break;
-									}*/
-
-									str_remaining = next_match[19];
-
-									//cout<<"nodes.size()"<< nodes.size() <<"\n";
+									str_remaining = next_match[8];
 								}
 							}
 
@@ -240,6 +236,7 @@ int main()
 
 							node_number = next_match[2];
 							node_num = stoi(node_number);
+
 
 							x_c = next_match.str(4) + next_match.str(5) + next_match.str(6) + next_match.str(7);
 							y_c = next_match.str(9) + next_match.str(10) + next_match.str(11) + next_match.str(12);
