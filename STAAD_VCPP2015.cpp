@@ -65,7 +65,7 @@ int main()
 	//matched array
 	smatch match, next_match;
 
-	string input = "    177. 832 0.25 1 0.75; 833 0.3 1 0.75; 834 0.25 1 0.8; 835 0.35 1 0.75";
+	// string input = "    177. 832 0.25 1 0.75; 833 0.3 1 0.75; 834 0.25 1 0.8; 835 0.35 1 0.75";
 	string str_remaining = " ";
 	string node_number, member_number, member_node_left, member_node_right;
 	string x_c, y_c, z_c;
@@ -186,7 +186,7 @@ int main()
 									}
 
 									member_number = next_match[2];
-									member_num = stoi(node_number);
+									member_num = stoi(member_number);
 
 									member_node_left = next_match.str(4);
 									member_node_right = next_match.str(6);
