@@ -17,12 +17,13 @@ using namespace std;
 
 int main()
 {
-	ifstream infile;
+	ifstream infile;				
 	char data[100];
 	string output_line;
 	string::size_type found, found2, found3;
 
-
+	// Defining the regular-expression in bits and pieces, which later add-on the create a complex one
+	// Named to explain what it does
 	string str_space_single = "(\\s)";
 	string str_space_many = "(\\s+)";
 	string str_space_some = "(\\s*)";
@@ -63,7 +64,7 @@ int main()
 	//matched array
 	smatch match, next_match;
 
-	string input = "    177. 832 0.25 1 0.75; 833 0.3 1 0.75; 834 0.25 1 0.8; 835 0.35 1 0.75";
+	// string input = "    177. 832 0.25 1 0.75; 833 0.3 1 0.75; 834 0.25 1 0.8; 835 0.35 1 0.75";
 	string str_remaining = " ";
 	string node_number;
 	string x_c, y_c, z_c;
@@ -72,11 +73,13 @@ int main()
 	float x, y, z;
 
 	vector< vector<float> > nodes(10000, vector<float>(3));
-
+	
+	// Create a regex object using the regular expression as defined above
 	regex joint_line(str_node_data_result_line);
 	regex member_line(str_member_data_result_line);
 	regex node_coords(str_node_number_coords_and);
-
+	
+	// Open the file, change path to the path to your ANL file
 	infile.open("test1.anl");
 
 	cout << "Reading from the file" << endl;
@@ -87,9 +90,10 @@ int main()
 		while (getline(infile, output_line))
 		{
 			//cout << output_line << '\n';
-
 			//cout<< "Line length is:"<<line.length();
-
+			
+			// Let all the other lines go, untill the words "JOINT COORDINATES" are found, as this represents the 
+			// the beginning of joint information
 			found = output_line.find("JOINT COORDINATES");
 
 			if (found != string::npos)
@@ -188,7 +192,8 @@ int main()
 									cout << " X coordinate " << x << "\n";
 									cout << " Y coordinate " << y << "\n";
 									cout << " Z coordinate " << z << "\n";
-
+									
+									// The nodes array contains the X, Y, Z coordinates of all the nodes in the system.
 									nodes[node_num][0] = x;
 									nodes[node_num][1] = y;
 									nodes[node_num][2] = z;
