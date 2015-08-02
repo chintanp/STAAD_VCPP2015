@@ -23,6 +23,9 @@ STAAD_VCPP2015.vcxproj.filters
 
 STAAD_VCPP2015.cpp
     This is the main application source file.
+    
+**** test2.anl ****
+    A sample ANL file, i.e. the result file generated from STAAD Pro.
 
 /////////////////////////////////////////////////////////////////////////////
 Other standard files:
